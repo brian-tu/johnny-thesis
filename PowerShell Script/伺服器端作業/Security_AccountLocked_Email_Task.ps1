@@ -1,26 +1,26 @@
-# ³]©w³qª¾±H¥ó¤H©M¦¬¥ó¤Hªº¹q¤l¶l¥ó¦a§}
+# è¨­å®šé€šçŸ¥å¯„ä»¶äººå’Œæ”¶ä»¶äººçš„é›»å­éƒµä»¶åœ°å€
 $From = "johnnytu0401@gmail.com"
 $To = "johnnytu0401@gmail.com"
 
-# ³]©w³qª¾¶l¥ó¥D¦®©M¤º®e
-$Subject = "AD ±b¤á³Ì·s¤@µ§Âê©w¨Æ¥ó³qª¾"
+# è¨­å®šé€šçŸ¥éƒµä»¶ä¸»æ—¨å’Œå…§å®¹
+$Subject = "AD å¸³æˆ¶æœ€æ–°ä¸€ç­†é–å®šäº‹ä»¶é€šçŸ¥"
 
-# ³]©w SMTP ¦øªA¾¹
+# è¨­å®š SMTP ä¼ºæœå™¨
 $SmtpServer = "smtp.gmail.com"
 $SmtpPort = 587
 $UserName = "johnnytu0401@gmail.com"
-$Password = "wtxz figx qbkl xahx" # À³¥Îµ{¦¡±M¥Î±K½X
+$Password = "wtxz figx qbkl xahx" # æ‡‰ç”¨ç¨‹å¼å°ˆç”¨å¯†ç¢¼
 $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
 $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $UserName, $securePassword
 $smtp = New-Object system.net.mail.smtpClient($SmtpServer, $SmtpPort)
 $smtp.EnableSsl = $true
 $smtp.Credentials = $Credential
 
-# ¨ú±o³Ì·s¤@µ§ AD ±b¤á³QÂê©w¨Æ¥ó
+# å–å¾—æœ€æ–°ä¸€ç­† AD å¸³æˆ¶è¢«é–å®šäº‹ä»¶
 $Event = Get-WinEvent -FilterHashtable @{LogName='Security';Id=4740} -MaxEvents 1
 
 if ($Event) {
-    # ¨ú±o¨Æ¥ó¸ê°T
+    # å–å¾—äº‹ä»¶è³‡è¨Š
     $EventData = $Event.Properties
     $TargetUserName = $EventData[0].Value
     $TargetDomainName = $EventData[5].Value
@@ -29,17 +29,17 @@ if ($Event) {
     $IpAddress = $EventData[4].Value
     $WorkstationName = $EventData[1].Value
 
-    # °e¥X³qª¾¶l¥ó
+    # é€å‡ºé€šçŸ¥éƒµä»¶
     $Message = New-Object System.Net.Mail.MailMessage $From, $To, $Subject, $Body
     $Message.IsBodyHtml = $false
     $Message.SubjectEncoding = [System.Text.Encoding]::UTF8
     $Message.BodyEncoding = [System.Text.Encoding]::UTF8
-    $Message.Body = "µo¥Í AD ±b¤áÂê©w¨Æ¥ó¡A½ĞÀË¬d¬ÛÃö¸ê°T¡G`r`n"
-    $Message.Body += "¥Ø¼Ğ¨Ï¥ÎªÌ¦WºÙ¡G$TargetUserName`r`n"
-    $Message.Body += "¥Ø¼Ğ¨Ï¥ÎªÌºô°ì¦WºÙ¡G$TargetDomainName`r`n"
-    $Message.Body += "©I¥sªÌ¨Ï¥ÎªÌ¦WºÙ¡G$CallerUserName`r`n"
-    $Message.Body += "©I¥sªÌ¨Ï¥ÎªÌºô°ì¦WºÙ¡G$CallerDomainName`r`n"
-    $Message.Body += "¨Ó·½ IP ¦ì§}¡G$IpAddress`r`n"
-    $Message.Body += "¤u§@¯¸¦WºÙ¡G$WorkstationName`r`n"
+    $Message.Body = "ç™¼ç”Ÿ AD å¸³æˆ¶é–å®šäº‹ä»¶ï¼Œè«‹æª¢æŸ¥ç›¸é—œè³‡è¨Šï¼š`r`n"
+    $Message.Body += "ç›®æ¨™ä½¿ç”¨è€…åç¨±ï¼š$TargetUserName`r`n"
+    $Message.Body += "ç›®æ¨™ä½¿ç”¨è€…ç¶²åŸŸåç¨±ï¼š$TargetDomainName`r`n"
+    $Message.Body += "å‘¼å«è€…ä½¿ç”¨è€…åç¨±ï¼š$CallerUserName`r`n"
+    $Message.Body += "å‘¼å«è€…ä½¿ç”¨è€…ç¶²åŸŸåç¨±ï¼š$CallerDomainName`r`n"
+    $Message.Body += "ä¾†æº IP ä½å€ï¼š$IpAddress`r`n"
+    $Message.Body += "å·¥ä½œç«™åç¨±ï¼š$WorkstationName`r`n"
     $smtp.Send($Message)
 }
